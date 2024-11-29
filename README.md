@@ -1,6 +1,10 @@
 # 项目概述
 这是一个用于在寝室中不用下床开关灯的， 将esp8266作为服务器，通过手机web端进行控制舵机运动从而拨动开关的一个项目。
 
+# 演示链接和焊接视频
+焊接视频：https://www.bilibili.com/video/BV1LpzrY1Ee3/?vd_source=3774f0978f9f143e4c2fcfed1f5bf447
+演示视频：https://www.bilibili.com/video/BV1DSzBYhEJo/
+
 # 功能
 1.使用电池，可以实现断电后继续运行
 
