@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Demo</title>
+    <style>
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font: 20px Arial, sans-serif;
+        }
+
+        .setting_line {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        .setting_line label {
+            width: 50%;
+            font-size: 16px;
+            font-weight: normal;
+            display: inline-block;
+            text-align: left;
+            /* 标签文本对齐到右侧 */
+            margin-right: 10px;
+            /* 添加标签和输入框之间的间距 */
+            line-height: 2;
+        }
+
+        .setting_line input {
+            width: 50%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            color: #333;
+            background-color: #fff;
+            transition: all 0.3s ease;
+        }
+
+        .setting_line input:hover {
+            border-color: #888;
+            background-color: #f9f9f9;
+        }
+
+        .setting_line input:focus {
+            outline: none;
+            border-color: #5b9bd5;
+            box-shadow: 0 0 5px rgba(91, 155, 213, 0.5);
+        }
+
+
+        .setting_line button {
+            font-size: large;
+            width: 100%;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+
+        #info {
+            color: red;
+            font-weight: 400;
+            font-size: medium;
+            margin-left: 5px;
+        }
+
+        h2 {
+            border-bottom: 1px solid #000;
+            padding-bottom: 10px;
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            width: 100%;
+            border-bottom: 1px solid hotpink;
+            color: lightpink;
+            padding-bottom: 5px;
+            margin-bottom: 30px;
+        }
+
+        .nav_active {
+            color: deeppink;
+            font-weight: bold;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 100%;
+            gap: 10px;
+        }
+
+        .btn-group button {
+            font-size: 26px;
+            width: 100%;
+            font-weight: lighter;
+            padding: 10px 60px;
+            border-radius: 10px;
+            border: 1px solid darkgray;
+            background-color: #fff;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-group button:hover {
+            background-color: #f0f0f0;
+            border-color: #999;
+            color: #000;
+        }
+
+        .btn-group button:focus {
+            outline: none;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-group button:active {
+            background-color: #e0e0e0;
+            border-color: #666;
+            color: #222;
+            transform: scale(0.98);
+        }
+
+        .setting_line button:hover {
+            background-color: #f0f0f0;
+            border-color: #999;
+            color: #000;
+        }
+
+        .setting_line button:focus {
+            outline: none;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .setting_line button:active {
+            background-color: #e0e0e0;
+            border-color: #666;
+            color: #222;
+            transform: scale(0.98);
+        }
+
+        .
+    </style>
+</head>
+
+<body>
+
+    <h2 style="color: gray;">Message: <span id="info">message bar</span></h2>
+    <div class="nav">
+        <div class="nav_active" onclick="page1()" id="page1Nav">homing</div>
+        <div onclick="page2()" id="page2Nav">settings</div>
+    </div>
+
+    <div class="container">
+        <div class="page1" style="display: block;">
+            <!-- <button onclick="sayHello()">say hello</button> -->
+            <div class="btn-group" style="margin-top: 150px;">
+                <button onclick="light_on_bulb()">开灯</button>
+                <button onclick="light_off_bulb()">关灯</button>
+            </div>
+        </div>
+        <div class="page2" style="display: none;">
+            <div class="setting_line">
+                <label for="ssid">wifi 名字：</label>
+                <input type="text" id="ssid">
+            </div>
+            <div class="setting_line">
+                <label for="password">wifi 密码：</label>
+                <input type="text" id="password">
+            </div>
+            <div class="setting_line">
+                <button onclick="save_wifi_config()">保存并设置wifi名称密码</button>
+            </div>
+            <div style="height: 20px;"></div>
+            <div class="setting_line">
+                <label for="servo_on">舵机开灯角度：</label>
+                <input type="text" id="servo_on">
+            </div>
+
+            <div class="setting_line">
+                <label for="servo_off">舵机关灯角度：</label>
+                <input type="text" id="servo_off">
+            </div>
+
+            <div class="setting_line">
+                <button onclick="test_servo_on()">测试开灯角度</button>
+                <div style="width: 10px;"></div>
+                <button onclick="test_servo_off()">测试关灯角度</button>
+            </div>
+
+            <div class="setting_line">
+                <button onclick="save_servo_config()">保存并设置舵机角度</button>
+            </div>
+
+            <div style="height: 10px;">
+
+            </div>
+
+            <div class="setting_line">
+                <button onclick="power_led_on()">显示灯开启</button>
+                <div style="width: 10px;"></div>
+                <button onclick="power_led_off()">显示灯关闭</button>
+            </div>
+            <div class="setting_line">
+                <button onclick="restart_esp()">重启服务器</button>
+            </div>
+
+        </div>
+    </div>
+
+
+    <script>
+        var ws = null;
+        var info = msg => document.getElementById("info").innerHTML = msg;
+
+        function connect_ws() {
+            try {
+                // Automatically use secure WebSocket if the page is using https
+                ws = new WebSocket(`ws://${window.location.hostname}/ws`);
+
+                ws.onopen = function (evt) {
+                    info("Connection open...");
+                };
+
+                ws.onmessage = on_message;
+
+                ws.onclose = function (evt) {
+                    info("Connection closed.");
+                    ws = null;
+                };
+
+                ws.onerror = function (evt) {
+                    info("Connection error.");
+                    ws = null;
+                };
+            } catch (e) {
+                ws = null;
+                info("Connection error.");
+            }
+        };
+
+        function send_message(json_data) {
+            if (ws === null || ws.readyState !== WebSocket.OPEN) {
+                connect_ws();
+            } else {
+                ws.send(JSON.stringify(json_data));
+            }
+        };
+
+
+
+        function on_message(evt) {
+            let data = JSON.parse(evt.data);
+            info(data.message);
+            if (data.cmd === "init") {
+                document.getElementById("ssid").value = data.wifi_config.ssid;
+                document.getElementById("password").value = data.wifi_config.password;
+                document.getElementById("servo_on").value = data.servo_config.servo_on;
+                document.getElementById("servo_off").value = data.servo_config.servo_off;
+            };
+        };
+
+        function validate_angle(string_value) {
+            let value = parseInt(string_value);
+            if (value < 0) {
+                info("角度不能小于0");
+                return false;
+            } else if (value > 180) {
+                info("角度不能大于180");
+                return false;
+            } else {
+                return value;
+            };
+        };
+
+        function test_servo_on() {
+            let value = validate_angle(document.getElementById("servo_on").value);
+            if (value !== false) {
+                send_message({ "cmd": "set_angle", "angle": value + "" });
+            };
+        };
+        function test_servo_off() {
+            let value = validate_angle(document.getElementById("servo_off").value);
+            if (value !== false) {
+                send_message({ "cmd": "set_angle", "angle": value + "" });
+            };
+        };
+
+        /* function sayHello() {
+            send_message({ "message": "Hello, server!" });
+        }; */
+
+        function save_servo_config() {
+            let servo_on = validate_angle(document.getElementById("servo_on").value);
+            let servo_off = validate_angle(document.getElementById("servo_off").value);
+            if (servo_on !== false && servo_off !== false) {
+                send_message({ "cmd": "save_servo_config", "servo_on": servo_on + "", "servo_off": servo_off + "" });
+            };
+        };
+
+        function validate_wifi_config(ssid, password) {
+            if (ssid === "") {
+                info("SSID不能为空");
+                return false;
+            } else if (password === "") {
+                info("密码不能为空");
+                return false;
+            } else {
+                return true;
+            };
+        };
+
+        function save_wifi_config() {
+            let ssid = document.getElementById("ssid").value;
+            let password = document.getElementById("password").value;
+            if (validate_wifi_config(ssid, password)) {
+                // 去除前后的空格
+                ssid = ssid.trim();
+                password = password.trim();
+                send_message({ "cmd": "save_wifi_config", "ssid": ssid, "password": password });
+            };
+        };
+
+        function restart_esp() {
+            send_message({ "cmd": "restart_esp" });
+        };
+
+        function power_led_on() {
+            send_message({ "cmd": "power_led_on" });
+        };
+        function power_led_off() {
+            send_message({ "cmd": "power_led_off" });
+        };
+
+        function light_on_bulb() {
+            send_message({ "cmd": "light_on_bulb" });
+        };
+        function light_off_bulb() {
+            send_message({ "cmd": "light_off_bulb" });
+        };
+
+        function page1() {
+            document.querySelector(".page1").style.display = "block";
+            document.getElementById("page1Nav").classList.add("nav_active");
+            document.getElementById("page2Nav").classList.remove("nav_active");
+            document.querySelector(".page2").style.display = "none";
+        }
+
+        function page2() {
+            document.querySelector(".page1").style.display = "none";
+            document.getElementById("page1Nav").classList.remove("nav_active");
+            document.getElementById("page2Nav").classList.add("nav_active");
+            document.querySelector(".page2").style.display = "block";
+        }
+
+        window.onload = function () {
+            connect_ws();
+        };
+    </script>
+
+</body>
+
+</html>
